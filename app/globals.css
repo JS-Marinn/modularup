@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #172e3f;
+  --color-primary-foreground: #ffffff;
+
+  --color-accent: #fbbf48;
+  --color-accent-foreground: #172e3f;
+
+  --color-secondary: #f4e4d6;
+  --color-secondary-foreground: #172e3f;
+
+  --font-display: var(--font-nunito-sans), ui-sans-serif, system-ui;
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui;
+  --font-body: var(--font-lato), ui-sans-serif, system-ui;
+
+  @keyframes pulse-slow {
+
+    0%,
+    100% {
+      opacity: 0.6;
+      transform: scale(1.05);
+    }
+
+    50% {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-right {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes reveal {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  --animate-pulse-slow: pulse-slow 20s infinite ease-in-out;
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in: fade-in 1s ease-out forwards;
+  --animate-slide-right: slide-right 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-reveal: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.reveal-anim {
+  clip-path: inset(0 100% 0 0);
+  animation: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.fade-up-anim {
+  opacity: 0;
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.fade-in-anim {
+  opacity: 0;
+  animation: fade-in 1s ease-out forwards;
+}
+
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+
+.stagger-5 {
+  animation-delay: 0.5s;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.rotate-y-6 {
+  transform: rotateY(6deg);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #172e3f;
+}
+
+@layer base {
+  body {
+    @apply antialiased font-body text-primary bg-[#fcfcfc] transition-colors duration-500 ease-in-out;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-bold;
+  }
+}
+
+@layer components {
+  .container {
+    @apply px-4 mx-auto max-w-7xl;
+  }
+
+  .premium-card {
+    @apply bg-white border border-gray-100 shadow-sm transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2;
+  }
+
+  .btn-premium {
+    @apply relative overflow-hidden bg-primary text-white font-bold py-4 px-10 uppercase tracking-[0.2em] transition-all duration-300 active:scale-95;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #172E3F;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FBBF48;
+}
+
+/* Smooth Image Loading */
+img {
+  transition: opacity 0.5s ease-in-out;
+}
