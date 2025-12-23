@@ -79,6 +79,7 @@
   --animate-reveal: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
 }
 
+/* Utilities */
 .reveal-anim {
   clip-path: inset(0 100% 0 0);
   animation: reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
@@ -94,6 +95,7 @@
   animation: fade-in 1s ease-out forwards;
 }
 
+/* Animation Delays */
 .stagger-1 {
   animation-delay: 0.1s;
 }
@@ -114,6 +116,7 @@
   animation-delay: 0.5s;
 }
 
+/* 3D Transforms */
 .perspective-1000 {
   perspective: 1000px;
 }
@@ -122,6 +125,7 @@
   transform: rotateY(6deg);
 }
 
+/* Scrollbar Hiding */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -131,41 +135,7 @@
   scrollbar-width: none;
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #172e3f;
-}
-
-@layer base {
-  body {
-    @apply antialiased font-body text-primary bg-[#fcfcfc] transition-colors duration-500 ease-in-out;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-display font-bold;
-  }
-}
-
-@layer components {
-  .container {
-    @apply px-4 mx-auto max-w-7xl;
-  }
-
-  .premium-card {
-    @apply bg-white border border-gray-100 shadow-sm transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2;
-  }
-
-  .btn-premium {
-    @apply relative overflow-hidden bg-primary text-white font-bold py-4 px-10 uppercase tracking-[0.2em] transition-all duration-300 active:scale-95;
-  }
-}
-
-/* Custom scrollbar */
+/* Custom Scrollbar for global */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -181,6 +151,42 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #FBBF48;
+}
+
+/* Base Styles */
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #172e3f;
+  }
+
+  body {
+    @apply antialiased font-body text-primary bg-[#fcfcfc] transition-colors duration-500 ease-in-out;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-bold;
+  }
+}
+
+/* Component Styles */
+@layer components {
+  .container {
+    @apply px-4 mx-auto max-w-7xl;
+  }
+
+  .premium-card {
+    @apply bg-white border border-gray-100 shadow-sm transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2;
+  }
+
+  .btn-premium {
+    @apply relative overflow-hidden bg-primary text-white font-bold py-4 px-10 uppercase tracking-[0.2em] transition-all duration-300 active:scale-95;
+  }
 }
 
 /* Smooth Image Loading */

@@ -17,7 +17,7 @@ export default function CategoryGrid() {
                         src={category.image}
                         alt={category.name}
                         fill
-                        className="object-cover transition-all duration-[8s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-110 group-hover:rotate-2"
+                        className="object-cover transition-all duration-[30s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-110 group-hover:rotate-2"
                     />
                     <div className="absolute inset-x-10 bottom-16 z-20">
                         <div className="overflow-hidden mb-4">

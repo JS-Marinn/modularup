@@ -47,7 +47,7 @@ export default function ProductCard({ product }: { product: Product }) {
                         src={product.image}
                         alt={product.name}
                         fill
-                        className="object-cover transition-all duration-[8s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-110 group-hover:rotate-1"
+                        className="object-cover transition-all duration-[30s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-110 group-hover:rotate-1"
                     />
                     <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                 </Link>

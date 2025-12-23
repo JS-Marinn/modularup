@@ -45,7 +45,7 @@ export default function ProductClient({ product }: { product: any }) {
                                 src={product.image}
                                 alt={product.name}
                                 fill
-                                className="object-cover transition-transform duration-[8s] group-hover:scale-110"
+                                className="object-cover transition-transform duration-[30s] group-hover:scale-110"
                                 priority
                             />
                             <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -54,7 +54,7 @@ export default function ProductClient({ product }: { product: any }) {
                             <div className="grid grid-cols-4 gap-6">
                                 {product.gallery.map((img: string, idx: number) => (
                                     <div key={idx} className="aspect-square bg-gray-50 cursor-pointer overflow-hidden border border-gray-100 group relative">
-                                        <Image src={img} fill className="object-cover transition-transform group-hover:scale-110" alt={`${product.name} ${idx}`} />
+                                        <Image src={img} fill className="object-cover transition-transform duration-[30s] group-hover:scale-110" alt={`${product.name} ${idx}`} />
                                     </div>
                                 ))}
                             </div>
