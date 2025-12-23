@@ -8,13 +8,19 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
                     {/* Col 1: About */}
                     <div className="space-y-6">
-                        <div className="relative h-16 w-48">
-                            <Image
-                                src="/logos/LOGO-MODULAR-UP-(VERSION-1).png"
-                                alt="Modular UP Footer Logo"
-                                fill
-                                className="object-contain brightness-0 invert opacity-90"
-                            />
+                        <div className="flex items-center gap-3 group">
+                            <div className="relative w-12 h-12">
+                                <Image
+                                    src="/logos/LOGO-MODULAR-UP2.png"
+                                    alt="Modular UP Isotipo"
+                                    fill
+                                    className="object-contain transition-transform duration-500 group-hover:scale-110"
+                                />
+                            </div>
+                            <div className="overflow-hidden">
+                                <h4 className="text-accent font-display text-xl leading-none uppercase font-extrabold tracking-wider">MODULAR UP</h4>
+                                <p className="text-white/40 text-[9px] leading-tight font-sans tracking-[0.2em] uppercase font-bold">Muebles & Diseños</p>
+                            </div>
                         </div>
                         <p className="text-white/60 text-sm leading-relaxed font-body">
                             Modular UP es la marca líder en soluciones de mobiliario moderno. Redefinimos el concepto de modularidad para brindarte espacios que hablan de ti.

@@ -58,13 +58,19 @@ export default function Header() {
                 <div className={`absolute left-0 top-0 bottom-0 w-[85%] max-w-sm bg-primary border-r border-white/10 shadow-2xl transition-transform duration-500 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="flex flex-col h-full p-8">
                         <div className="flex items-center justify-between mb-12">
-                            <div className="relative w-12 h-12">
-                                <Image
-                                    src="/logos/LOGO-MODULAR-UP-(VERSION-1).png"
-                                    alt="Logo"
-                                    fill
-                                    className="object-contain"
-                                />
+                            <div className="flex items-center gap-3">
+                                <div className="relative w-10 h-10">
+                                    <Image
+                                        src="/logos/LOGO-MODULAR-UP2.png"
+                                        alt="Logo"
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
+                                <div className="overflow-hidden">
+                                    <h2 className="text-accent font-display text-lg leading-none uppercase font-extrabold tracking-wider">MODULAR UP</h2>
+                                    <p className="text-white/40 text-[8px] leading-tight font-sans tracking-[0.2em] uppercase font-bold">Muebles & Diseños</p>
+                                </div>
                             </div>
                             <button onClick={() => setIsMenuOpen(false)} className="text-white hover:text-accent p-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
