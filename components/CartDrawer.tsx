@@ -8,7 +8,7 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean, onClo
     const { cart, removeFromCart, updateQuantity, cartTotal, cartCount } = useCart();
 
     return (
-        <div className={`fixed inset-0 z-[100] overflow-hidden transition-all duration-700 ${isOpen ? 'visible' : 'invisible'}`}>
+        <div className={`fixed inset-0 z-[500] overflow-hidden transition-all duration-700 ${isOpen ? 'visible' : 'invisible'}`}>
             {/* Backdrop */}
             <div
                 className={`absolute inset-0 bg-primary/40 backdrop-blur-md transition-opacity duration-700 cubic-bezier(0.16, 1, 0.3, 1) ${isOpen ? 'opacity-100' : 'opacity-0'}`}
