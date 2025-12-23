@@ -7,6 +7,12 @@ type Props = {
     params: Promise<{ slug: string }>;
 };
 
+export async function generateStaticParams() {
+    return categories.map((category) => ({
+        slug: category.slug,
+    }));
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
     const category = categories.find(c => c.slug === slug);
@@ -38,8 +44,7 @@ export default async function CategoryPage({ params }: Props) {
                 <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
             </div>
         }>
-            <CategoryClient categorySlug={slug} initialCategory={JSON.parse(JSON.stringify(category))} />
+            <CategoryClient categorySlug={slug} initialCategory={category ? JSON.parse(JSON.stringify(category)) : null} />
         </Suspense>
     );
 }
-
