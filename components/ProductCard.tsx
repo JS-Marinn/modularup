@@ -52,15 +52,15 @@ export default function ProductCard({ product }: { product: Product }) {
                     <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                 </Link>
 
-                {/* Overlay Action Button */}
-                <div className="absolute inset-x-0 bottom-0 p-6 translate-y-full group-hover:translate-y-0 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-20">
+                {/* Overlay Action Button - Always visible on mobile, hover on desktop */}
+                <div className="absolute inset-x-0 bottom-0 p-4 lg:p-6 lg:translate-y-full lg:group-hover:translate-y-0 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-20">
                     <button
                         onClick={handleAddToCart}
-                        className={`w-full font-bold py-4 text-[10px] uppercase tracking-[0.3em] shadow-2xl transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 ${isAdded ? 'bg-green-600 text-white' : 'bg-primary text-white hover:bg-accent hover:text-primary'}`}
+                        className={`w-full font-bold py-3 lg:py-4 text-[9px] lg:text-[10px] uppercase tracking-[0.2em] lg:tracking-[0.3em] shadow-2xl transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-2 ${isAdded ? 'bg-green-600 text-white' : 'bg-primary text-white lg:hover:bg-accent lg:hover:text-primary'}`}
                     >
                         {isAdded ? (
                             <>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                                <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
                                 ¡Añadido!
                             </>
                         ) : (
@@ -71,27 +71,27 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
 
             {/* Product Info */}
-            <div className="p-8 flex flex-col flex-grow relative bg-white">
-                <div className="mb-6">
-                    <span className="text-[9px] font-bold text-accent uppercase tracking-[0.3em] block mb-2 opacity-60">{product.subcategory}</span>
-                    <h3 className="text-base font-display font-black text-primary uppercase tracking-tight group-hover:text-accent transition-colors duration-500 leading-tight">
+            <div className="p-5 lg:p-8 flex flex-col flex-grow relative bg-white">
+                <div className="mb-4 lg:mb-6">
+                    <span className="text-[8px] lg:text-[9px] font-bold text-accent uppercase tracking-[0.3em] block mb-1.5 lg:mb-2 opacity-60">{product.subcategory}</span>
+                    <h3 className="text-sm lg:text-base font-display font-black text-primary uppercase tracking-tight group-hover:text-accent transition-colors duration-500 leading-tight">
                         {product.name}
                     </h3>
                 </div>
 
-                <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                <div className="mt-auto pt-3 lg:pt-4 border-t border-gray-50 flex items-center justify-between">
                     <div className="flex flex-col">
                         {oldPriceFormatted && (
-                            <span className="text-[10px] text-gray-300 line-through mb-1 font-bold">{oldPriceFormatted}</span>
+                            <span className="text-[9px] lg:text-[10px] text-gray-300 line-through mb-0.5 lg:mb-1 font-bold">{oldPriceFormatted}</span>
                         )}
-                        <span className="text-xl font-display font-black text-primary tracking-tighter">
+                        <span className="text-lg lg:text-xl font-display font-black text-primary tracking-tighter">
                             {formattedPrice}
                         </span>
                     </div>
 
-                    <div className="flex text-accent gap-0.5 opacity-40 group-hover:opacity-100 transition-opacity duration-700">
+                    <div className="hidden sm:flex text-accent gap-0.5 opacity-40 group-hover:opacity-100 transition-opacity duration-700">
                         {[...Array(5)].map((_, i) => (
-                            <svg key={i} className={`w-3 h-3 fill-current ${i < product.rating ? '' : 'text-gray-200'}`} viewBox="0 0 20 20">
+                            <svg key={i} className={`w-2.5 h-2.5 lg:w-3 lg:h-3 fill-current ${i < product.rating ? '' : 'text-gray-200'}`} viewBox="0 0 20 20">
                                 <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                             </svg>
                         ))}

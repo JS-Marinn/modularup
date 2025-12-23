@@ -5,26 +5,146 @@ import Image from "next/image";
 import SearchBar from "@/components/SearchBar";
 import { categories } from "@/data/categories";
 import { useCart } from "@/context/CartContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import CartDrawer from "./CartDrawer";
 
 export default function Header() {
     const { cartCount } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+    const [submenuTimeout, setSubmenuTimeout] = useState<NodeJS.Timeout | null>(null);
+    const pathname = usePathname();
+
+    // Close mobile menu and search when route changes
+    useEffect(() => {
+        setIsMenuOpen(false);
+        setIsSearchOpen(false);
+    }, [pathname]);
+
+    // Prevent scrolling when menu is open
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+    }, [isMenuOpen]);
+
+    const handleMouseEnter = (slug: string) => {
+        if (submenuTimeout) clearTimeout(submenuTimeout);
+        setActiveSubmenu(slug);
+    };
+
+    const handleMouseLeave = () => {
+        const timeout = setTimeout(() => {
+            setActiveSubmenu(null);
+        }, 100);
+        setSubmenuTimeout(timeout);
+    };
 
     return (
         <>
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
-            <div className="bg-accent text-primary py-2 px-4 text-center text-[10px] font-black tracking-[0.3em] uppercase">
+            {/* Mobile Menu Overlay */}
+            <div className={`fixed inset-0 z-[200] lg:hidden transition-all duration-500 ${isMenuOpen ? 'visible' : 'invisible'}`}>
+                <div
+                    className={`absolute inset-0 bg-primary/95 backdrop-blur-md transition-opacity duration-500 ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+                    onClick={() => setIsMenuOpen(false)}
+                />
+                <div className={`absolute left-0 top-0 bottom-0 w-[85%] max-w-sm bg-primary border-r border-white/10 shadow-2xl transition-transform duration-500 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div className="flex flex-col h-full p-8">
+                        <div className="flex items-center justify-between mb-12">
+                            <div className="relative w-12 h-12">
+                                <Image
+                                    src="/logos/LOGO-MODULAR-UP-(VERSION-1).png"
+                                    alt="Logo"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                            <button onClick={() => setIsMenuOpen(false)} className="text-white hover:text-accent p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <nav className="flex-grow">
+                            <ul className="space-y-8">
+                                {categories.map((cat) => (
+                                    <li key={cat.id} className="space-y-4">
+                                        <Link
+                                            href={`/category/${cat.slug}`}
+                                            className="text-2xl font-black text-white hover:text-accent transition-colors uppercase tracking-widest"
+                                        >
+                                            {cat.name}
+                                        </Link>
+                                        <ul className="pl-4 space-y-3 border-l border-white/10">
+                                            {cat.subcategories.map((sub) => (
+                                                <li key={sub.slug}>
+                                                    <Link
+                                                        href={`/category/${cat.slug}?sub=${sub.slug}`}
+                                                        className="text-white/60 hover:text-white uppercase text-[10px] tracking-[0.2em] font-bold"
+                                                    >
+                                                        {sub.name}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </li>
+                                ))}
+                                <li className="pt-4 mt-4 border-t border-white/10">
+                                    <Link
+                                        href="/#catalog"
+                                        className="text-2xl font-black text-accent hover:text-white transition-colors uppercase tracking-widest flex items-center gap-4"
+                                    >
+                                        OFERTAS
+                                        <span className="w-2.5 h-2.5 bg-red-600 rounded-full animate-pulse"></span>
+                                    </Link>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <div className="mt-auto pt-10 grid grid-cols-2 gap-4">
+                            <Link href="/account" className="bg-white/5 border border-white/10 p-4 flex flex-col items-center gap-2 rounded-sm group">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white group-hover:text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span className="text-[8px] text-white uppercase font-black tracking-widest">Cuenta</span>
+                            </Link>
+                            <Link href="/orders" className="bg-white/5 border border-white/10 p-4 flex flex-col items-center gap-2 rounded-sm group">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white group-hover:text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                <span className="text-[8px] text-white uppercase font-black tracking-widest">Pedidos</span>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="bg-accent text-primary py-2 px-4 text-center text-[8px] md:text-[10px] font-black tracking-[0.2em] md:tracking-[0.3em] uppercase">
                 Envíos gratuitos a todo el país por compras superiores a $1.000.000
             </div>
 
             <header className="bg-primary text-white sticky top-0 z-[100] shadow-2xl">
-                <div className="container py-4 flex items-center justify-between gap-8 md:gap-12">
-                    <Link href="/" className="flex items-center gap-3 shrink-0 group">
-                        <div className="relative w-12 h-12">
+                <div className="container py-3 lg:py-4 flex items-center justify-between gap-4">
+                    {/* Mobile Menu Button */}
+                    <button
+                        onClick={() => setIsMenuOpen(true)}
+                        className="lg:hidden p-2 text-white hover:text-accent transition-colors"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+
+                    <Link href="/" className="flex items-center gap-2 lg:gap-3 shrink-0 group">
+                        <div className="relative w-10 h-10 lg:w-12 lg:h-12">
                             <Image
                                 src="/logos/LOGO-MODULAR-UP-(VERSION-1).png"
                                 alt="Modular UP Logo"
@@ -32,19 +152,29 @@ export default function Header() {
                                 className="object-contain transition-transform duration-500 group-hover:scale-110"
                             />
                         </div>
-                        <div className="hidden lg:block overflow-hidden">
-                            <h1 className="text-accent font-display text-xl leading-none uppercase font-extrabold tracking-wider">MODULAR UP</h1>
-                            <p className="text-white/60 text-[9px] leading-tight font-sans tracking-[0.2em] uppercase font-bold">Muebles & Diseños</p>
+                        <div className="hidden sm:block overflow-hidden">
+                            <h1 className="text-accent font-display text-lg lg:text-xl leading-none uppercase font-extrabold tracking-wider">MODULAR UP</h1>
+                            <p className="text-white/60 text-[8px] lg:text-[9px] leading-tight font-sans tracking-[0.2em] uppercase font-bold">Muebles & Diseños</p>
                         </div>
                     </Link>
 
-                    <div className="flex-grow max-w-[700px]">
+                    {/* Desktop Search Bar */}
+                    <div className="hidden lg:block flex-grow max-w-[700px]">
                         <SearchBar />
                     </div>
 
-                    <div className="flex items-center gap-10 shrink-0">
-                        {/* Mi Cuenta y Carrito Centrados verticalmente con etiquetas visibles */}
-                        <Link href="/account" className="flex flex-col items-center justify-center group text-white hover:text-accent transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="flex items-center gap-2 lg:gap-10 shrink-0">
+                        {/* Search Toggle for Mobile */}
+                        <button
+                            onClick={() => setIsSearchOpen(!isSearchOpen)}
+                            className="lg:hidden p-2 text-white hover:text-accent transition-colors"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+
+                        <Link href="/account" className="hidden lg:flex flex-col items-center justify-center group text-white hover:text-accent transition-all duration-300 transform hover:-translate-y-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
@@ -53,26 +183,34 @@ export default function Header() {
 
                         <button
                             onClick={() => setIsCartOpen(true)}
-                            className="relative group flex flex-col items-center justify-center text-white hover:text-accent transition-all duration-300 transform hover:-translate-y-1"
+                            className="relative group p-2 flex flex-col items-center justify-center text-white hover:text-accent transition-all duration-300 transform lg:hover:-translate-y-1"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
-                            <span className="absolute -top-1.5 -right-1.5 bg-accent text-primary text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-primary transition-transform group-hover:scale-125 shadow-lg">{cartCount}</span>
-                            <span className="text-[8px] uppercase font-black tracking-[0.2em] mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity">Carrito</span>
+                            <span className="absolute top-0.5 right-0.5 lg:-top-1.5 lg:-right-1.5 bg-accent text-primary text-[8px] lg:text-[9px] font-black w-3.5 h-3.5 lg:w-4 lg:h-4 rounded-full flex items-center justify-center border-2 border-primary transition-transform group-hover:scale-125 shadow-lg">{cartCount}</span>
+                            <span className="hidden lg:block text-[8px] uppercase font-black tracking-[0.2em] mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity">Carrito</span>
                         </button>
                     </div>
                 </div>
 
-                <nav className="border-t border-white/10 bg-black/5">
+                {/* Mobile Search Input Transition */}
+                <div className={`lg:hidden overflow-hidden transition-all duration-300 bg-black/10 ${isSearchOpen ? 'max-h-20 border-t border-white/5' : 'max-h-0'}`}>
+                    <div className="p-4">
+                        <SearchBar />
+                    </div>
+                </div>
+
+                {/* Desktop Navigation */}
+                <nav className="hidden lg:block border-t border-white/10 bg-black/5">
                     <div className="container">
                         <ul className="flex items-center justify-center gap-8 md:gap-16 py-4">
                             {categories.map((cat) => (
                                 <li
                                     key={cat.id}
                                     className="relative py-2 group cursor-pointer"
-                                    onMouseEnter={() => setActiveSubmenu(cat.slug)}
-                                    onMouseLeave={() => setActiveSubmenu(null)}
+                                    onMouseEnter={() => handleMouseEnter(cat.slug)}
+                                    onMouseLeave={handleMouseLeave}
                                 >
                                     <Link
                                         href={`/category/${cat.slug}`}
