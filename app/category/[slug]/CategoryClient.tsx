@@ -5,9 +5,9 @@ import { products } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useState, useMemo, Suspense } from "react";
 
-export default function CategoryClient({ categorySlug, initialCategory }: { categorySlug: string, initialCategory: any }) {
+function CategoryContent({ categorySlug, initialCategory }: { categorySlug: string, initialCategory: any }) {
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -196,5 +196,17 @@ export default function CategoryClient({ categorySlug, initialCategory }: { cate
                 </div>
             </section>
         </div>
+    );
+}
+
+export default function CategoryClient({ categorySlug, initialCategory }: { categorySlug: string, initialCategory: any }) {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-primary flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        }>
+            <CategoryContent categorySlug={categorySlug} initialCategory={initialCategory} />
+        </Suspense>
     );
 }
