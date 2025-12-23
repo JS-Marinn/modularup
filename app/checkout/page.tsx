@@ -3,14 +3,21 @@
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef } from "react";
 
 export default function CheckoutPage() {
     const { cart, cartTotal, clearCart } = useCart();
-    const router = useRouter();
     const [isProcessing, setIsProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const invoiceRef = useRef<HTMLDivElement>(null);
+
+    // Store order summary locally before clearing cart
+    const [orderSummary, setOrderSummary] = useState<{
+        items: any[],
+        total: number,
+        orderId: string,
+        date: string
+    } | null>(null);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -20,56 +27,118 @@ export default function CheckoutPage() {
         phone: ""
     });
 
-    useEffect(() => {
-        if (cart.length === 0 && !isSuccess) {
-            // If cart is empty and we haven't just finished a successful order, go home
-            // But we'll wait a bit to show a message if they arrived here by mistake
-        }
-    }, [cart, isSuccess]);
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const generateWhatsAppLink = () => {
+        if (!orderSummary) return "#";
+
+        // Formato de moneda para WhatsApp
+        const formatMoney = (val: number) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(val);
+
+        let message = `🛒 *ÓRDEN DE COMPRA - MODULAR UP*\n`;
+        message += `*Pedido:* #${orderSummary.orderId}\n`;
+        message += `*Fecha:* ${orderSummary.date}\n`;
+        message += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+        message += `👤 *CLIENTE*\n`;
+        message += `*Nombre:* ${formData.name}\n`;
+        message += `*Teléfono:* ${formData.phone}\n`;
+        message += `*Ciudad:* ${formData.city}\n`;
+        message += `*Dirección:* ${formData.address}\n`;
+        message += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+        message += `📦 *PROYECTO*\n`;
+
+        orderSummary.items.forEach(item => {
+            message += `▪️ *${item.quantity}x* ${item.name.toUpperCase()}\n`;
+            message += `   Subtotal: ${formatMoney(item.price * item.quantity)}\n`;
+        });
+
+        message += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+        message += `💰 *INVERSIÓN TOTAL: ${formatMoney(orderSummary.total)}*\n`;
+        message += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+        message += `🚀 *Solicito asesoría técnica para iniciar la fabricación del mobiliario.*`;
+
+        const encodedMessage = encodeURIComponent(message);
+        return `https://wa.me/573143455483?text=${encodedMessage}`;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsProcessing(true);
 
-        // Simulate premium processing
+        const summary = {
+            items: [...cart],
+            total: cartTotal,
+            orderId: Math.random().toString(36).substring(2, 9).toUpperCase(),
+            date: new Date().toLocaleDateString('es-CO')
+        };
+
         setTimeout(() => {
+            const currentSummary = summary;
+            setOrderSummary(currentSummary);
             setIsProcessing(false);
             setIsSuccess(true);
             clearCart();
+
+            // Formato de moneda para WhatsApp
+            const formatMoney = (val: number) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(val);
+
+            // Generar el link y redirigir
+            let message = `🛒 *ÓRDEN DE COMPRA - MODULAR UP*\n`;
+            message += `*Pedido:* #${currentSummary.orderId}\n`;
+            message += `*Fecha:* ${currentSummary.date}\n`;
+            message += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+            message += `👤 *CLIENTE*\n`;
+            message += `*Nombre:* ${formData.name}\n`;
+            message += `*Teléfono:* ${formData.phone}\n`;
+            message += `*Ciudad:* ${formData.city}\n`;
+            message += `*Dirección:* ${formData.address}\n`;
+            message += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+            message += `📦 *PROYECTO*\n`;
+
+            currentSummary.items.forEach(item => {
+                message += `▪️ *${item.quantity}x* ${item.name.toUpperCase()}\n`;
+                message += `   Subtotal: ${formatMoney(item.price * item.quantity)}\n`;
+            });
+
+            message += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+            message += `💰 *INVERSIÓN TOTAL: ${formatMoney(currentSummary.total)}*\n`;
+            message += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            message += `🚀 *Solicito asesoría técnica para iniciar la fabricación del mobiliario.*`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/573187212151?text=${encodedMessage}`;
+
+            // Redirección automática
+            window.location.href = whatsappUrl;
         }, 3000);
     };
 
     if (isSuccess) {
         return (
-            <div className="min-h-[80vh] flex items-center justify-center bg-white px-4">
+            <div className="min-h-screen flex items-center justify-center bg-[#fcfcfc] py-20 px-4">
                 <div className="max-w-2xl w-full text-center space-y-12 fade-in-anim">
-                    <div className="relative inline-block">
-                        <div className="w-32 h-32 bg-green-600 rounded-full flex items-center justify-center text-white shadow-[0_20px_50px_rgba(22,163,74,0.3)] relative z-10">
-                            <svg className="w-16 h-16 scale-anim" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                    <div className="space-y-8">
+                        <div className="relative inline-block">
+                            <div className="w-24 h-24 bg-green-600 rounded-full flex items-center justify-center text-white shadow-[0_20px_50px_rgba(22,163,74,0.3)] relative z-10">
+                                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                            </div>
+                            <div className="absolute inset-0 bg-green-600 rounded-full animate-ping opacity-20"></div>
                         </div>
-                        <div className="absolute inset-0 bg-green-600 rounded-full animate-ping opacity-20"></div>
+
+                        <div className="space-y-4">
+                            <h1 className="text-4xl md:text-6xl font-display font-black text-primary uppercase tracking-tighter leading-none">
+                                Pedido <br /> <span className="text-accent italic">Procesado</span>
+                            </h1>
+                            <p className="text-gray-400 font-sans text-sm uppercase tracking-[0.2em] font-black opacity-60">Redirigiendo a WhatsApp para finalizar...</p>
+                        </div>
                     </div>
 
-                    <div className="space-y-6">
-                        <h1 className="text-5xl md:text-7xl font-display font-black text-primary uppercase tracking-tighter leading-none">
-                            Pedido <br /> <span className="text-accent italic">Confirmado</span>
-                        </h1>
-                        <p className="text-gray-400 font-sans text-xl leading-relaxed max-w-md mx-auto">
-                            Gracias por confiar en el estándar Modular UP. Un arquitecto asesor se pondrá en contacto contigo en los próximos 30 minutos.
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                        <Link href="/" className="bg-primary text-white font-black py-6 px-12 uppercase tracking-[0.3em] text-[10px] hover:bg-accent hover:text-primary transition-all duration-500 shadow-2xl">
-                            Volver al Inicio
-                        </Link>
-                        <Link href="/orders" className="border-2 border-primary text-primary font-black py-6 px-12 uppercase tracking-[0.3em] text-[10px] hover:bg-primary hover:text-white transition-all duration-500">
-                            Ver Mis Proyectos
+                    <div className="pt-8 border-t border-gray-100">
+                        <Link href="/" className="text-[10px] font-black text-primary/40 hover:text-primary uppercase tracking-[0.4em] transition-colors border-b-2 border-transparent hover:border-accent pb-2">
+                            Volver al inicio
                         </Link>
                     </div>
                 </div>
@@ -77,7 +146,7 @@ export default function CheckoutPage() {
         );
     }
 
-    if (cart.length === 0) {
+    if (cart.length === 0 && !isSuccess) {
         return (
             <div className="min-h-[60vh] flex items-center justify-center bg-white">
                 <div className="text-center space-y-8 fade-in-anim">
@@ -96,7 +165,6 @@ export default function CheckoutPage() {
             <div className="container">
                 <div className="flex flex-col lg:flex-row gap-20 items-start">
 
-                    {/* Left: Checkout Form */}
                     <div className="flex-grow w-full space-y-16 fade-up-anim">
                         <div>
                             <h1 className="text-5xl md:text-7xl font-display font-black text-primary uppercase tracking-tighter leading-none mb-4">
@@ -208,7 +276,6 @@ export default function CheckoutPage() {
                         </form>
                     </div>
 
-                    {/* Right: Order Summary Sticky */}
                     <aside className="w-full lg:w-[450px] shrink-0 sticky top-32 fade-up-anim stagger-2">
                         <div className="bg-white p-12 shadow-[0_40px_100px_rgba(0,0,0,0.05)] border border-gray-50">
                             <h2 className="text-2xl font-display font-black text-primary uppercase tracking-tighter mb-10 border-b border-gray-50 pb-6">Resumen del Proyecto</h2>
@@ -233,15 +300,15 @@ export default function CheckoutPage() {
                             </ul>
 
                             <div className="space-y-4 border-t border-gray-100 pt-8 opacity-60">
-                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-gray-400">
                                     <span>Subtotal del Mobiliario</span>
                                     <span className="text-primary">{new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(cartTotal * 0.81)}</span>
                                 </div>
-                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-gray-400">
                                     <span>IVA Estimado (19%)</span>
                                     <span className="text-primary">{new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(cartTotal * 0.19)}</span>
                                 </div>
-                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-gray-400">
                                     <span>Envío Asegurado</span>
                                     <span className="text-green-600">Gratis</span>
                                 </div>

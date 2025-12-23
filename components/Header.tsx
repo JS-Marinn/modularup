@@ -109,6 +109,7 @@ export default function Header() {
                             </ul>
                         </nav>
 
+                        {/* 
                         <div className="mt-auto pt-10 grid grid-cols-2 gap-4">
                             <Link href="/account" className="bg-white/5 border border-white/10 p-4 flex flex-col items-center gap-2 rounded-sm group">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white group-hover:text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,6 +124,7 @@ export default function Header() {
                                 <span className="text-[8px] text-white uppercase font-black tracking-widest">Pedidos</span>
                             </Link>
                         </div>
+                        */}
                     </div>
                 </div>
             </div>
@@ -146,8 +148,8 @@ export default function Header() {
                     <Link href="/" className="flex items-center gap-2 lg:gap-3 shrink-0 group">
                         <div className="relative w-10 h-10 lg:w-12 lg:h-12">
                             <Image
-                                src="/logos/LOGO-MODULAR-UP-(VERSION-1).png"
-                                alt="Modular UP Logo"
+                                src="/logos/LOGO-MODULAR-UP2.png"
+                                alt="Modular UP Isotipo"
                                 fill
                                 className="object-contain transition-transform duration-500 group-hover:scale-110"
                             />
@@ -174,12 +176,14 @@ export default function Header() {
                             </svg>
                         </button>
 
+                        {/* 
                         <Link href="/account" className="hidden lg:flex flex-col items-center justify-center group text-white hover:text-accent transition-all duration-300 transform hover:-translate-y-1">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
-                            <span className="text-[8px] uppercase font-black tracking-[0.2em] mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity">Mi Cuenta</span>
+                            <span className="text-[10px] uppercase font-semibold tracking-[0.2em] mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity">Mi Cuenta</span>
                         </Link>
+                        */}
 
                         <button
                             onClick={() => setIsCartOpen(true)}
@@ -189,7 +193,7 @@ export default function Header() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
                             <span className="absolute top-0.5 right-0.5 lg:-top-1.5 lg:-right-1.5 bg-accent text-primary text-[8px] lg:text-[9px] font-black w-3.5 h-3.5 lg:w-4 lg:h-4 rounded-full flex items-center justify-center border-2 border-primary transition-transform group-hover:scale-125 shadow-lg">{cartCount}</span>
-                            <span className="hidden lg:block text-[8px] uppercase font-black tracking-[0.2em] mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity">Carrito</span>
+                            <span className="hidden lg:block text-[10px] uppercase font-semibold tracking-[0.2em] mt-1.5 opacity-60 group-hover:opacity-100 transition-opacity">Carrito</span>
                         </button>
                     </div>
                 </div>
